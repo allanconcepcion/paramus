@@ -4,6 +4,7 @@
 cms/*.log
 cms/*.map
 cms/*.bak
+cms/mysql.sql
 
 cms/themes/*
 cms/plugins/akismet
