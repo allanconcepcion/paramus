@@ -1,0 +1,22 @@
+name: Deploy WP - Ross Quartano - Staging
+on:
+  push:
+    branches:
+      - quartanorstg
+      
+jobs:
+  deploy:    
+    runs-on: ubuntu-latest    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Sync
+        uses: Burnett01/rsync-deployments@4.1
+        with:
+          switches: -avzr --delete --filter=". ./.rsync-filter"
+          path: cms/          
+          remote_host: 35.236.219.140
+          remote_port: 29304
+          remote_path: /www/rossquartanocms_113/public
+          remote_user: rossquartanocms
+          remote_key: ${{ secrets.KINSTA_SSH_DEPLOY_PRIVATE_KEY }}

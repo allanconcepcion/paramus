@@ -1,0 +1,21 @@
+- *.log
+- *.map
+- *~
+- .DS_Store
+- .svn
+- .cvs
+- .git*
+- *.bak
+- *.swp
+- Thumbs.db
+
+# wordpress specific
+- uploads**
+- backup-db**
+- index.php
+- themes/twenty**
+- themes/index.php
+- plugins/index.php
+
+# kinsta specific
+- mu-plugins/kinsta-mu-plugins**

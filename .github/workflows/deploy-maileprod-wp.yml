@@ -1,0 +1,21 @@
+name: Deploy WP - Mai Le [Production]
+on:
+  push:
+    branches:      
+      - maileprod
+jobs:
+  deploy:    
+    runs-on: ubuntu-latest    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Sync
+        uses: Burnett01/rsync-deployments@4.1
+        with:
+          switches: -avzr --delete --filter=". ./.rsync-filter"
+          path: cms/          
+          remote_host: 35.236.219.140
+          remote_port: 57524
+          remote_path: /www/mailecms_457/public/wp-content
+          remote_user: mailecms
+          remote_key: ${{ secrets.KINSTA_SSH_DEPLOY_PRIVATE_KEY }}

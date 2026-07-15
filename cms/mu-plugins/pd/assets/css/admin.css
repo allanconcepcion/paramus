@@ -1,0 +1,32 @@
+/* WP Core Overrides */
+
+.wysiwyg-short,
+.wysiwyg-medium {
+  min-height: 0 !important;
+}
+
+.wysiwyg-short iframe {
+  height: 75px !important;
+  min-height: 0 !important;
+}
+
+.wysiwyg-medium iframe {
+  height: 175px !important;
+  min-height: 0 !important;
+}
+
+/* Customize Page */
+
+.customize-publishing-actions {
+  display: flex;
+}
+
+.customize-publishing-actions select {
+  flex: 1;
+  width: 0;
+  margin: 0 5px 0 0;
+}
+
+.customize-publishing-actions .preview.button {
+  float: none;
+}

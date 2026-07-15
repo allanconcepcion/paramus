@@ -1,0 +1,26 @@
+# Important! Replace all text marked with double underscores (__) 
+# with environment specific values. 
+
+# Here, Doctor Name can be any pretty format you want, usually just their full name. 
+# Environment should be one of: Development | Staging | Production
+name: Deploy WP - __DOCTOR_NAME__ [__ENVIRONMENT__]
+on:
+  push:
+    branches:      
+      - __BRANCH__
+jobs:
+  deploy:    
+    runs-on: ubuntu-latest    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Sync
+        uses: Burnett01/rsync-deployments@4.1
+        with:
+          switches: -avzr --delete --filter=". ./.rsync-filter"
+          path: cms/          
+          remote_host: __IP_ADDRESSS__
+          remote_port: __PORT__
+          remote_path: __PATH_TO_WP_CONTENT_FOLDER__
+          remote_user: __SFTP_USER__
+          remote_key: ${{ secrets.KINSTA_SSH_DEPLOY_PRIVATE_KEY }}

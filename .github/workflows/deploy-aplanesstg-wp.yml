@@ -1,0 +1,25 @@
+# Important! Replace all bracketed text with environment specific values. 
+
+# Here, Doctor Name can be any pretty format you want. 
+# Environment should be one of: Development | Staging | Production
+name: Deploy WP - Alex Planes [Staging]
+on:
+  push:
+    branches:      
+      - aplanesstg
+jobs:
+  deploy:    
+    runs-on: ubuntu-latest    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Sync
+        uses: Burnett01/rsync-deployments@4.1
+        with:
+          switches: -avzr --delete --filter=". ./.rsync-filter"
+          path: cms/          
+          remote_host: 35.236.219.140
+          remote_port: 48981
+          remote_path: /www/alexplanescms_117/public/wp-content
+          remote_user: aplanesstg
+          remote_key: ${{ secrets.KINSTA_SSH_DEPLOY_PRIVATE_KEY }}

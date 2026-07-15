@@ -1,0 +1,46 @@
+*, :before, :after {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  font-size: 10px;
+
+  &.is-loading,   
+  &.is-loading * {
+    cursor: wait;
+  }
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {  
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%;
+  -ms-overflow-style: none;
+  -moz-osx-font-smoothing: grayscale;  
+  text-rendering: optimizeLegibility;
+  font-size: 1.6rem;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  overscroll-behavior-y: none;
+  display: flex;
+  flex-direction: column; 
+  min-height: 100vh;
+}
+
+#__next {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+#main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;  
+}

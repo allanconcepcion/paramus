@@ -1,0 +1,23 @@
+# Here, Doctor Name can be any pretty format you want. 
+# Environment should be one of: Development | Staging | Production
+name: Deploy - Slava Abdelrehim [Production]
+on:
+  push:
+    branches:      
+      - abdelrehimprod
+jobs:
+  deploy:    
+    runs-on: ubuntu-latest    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Sync
+        uses: Burnett01/rsync-deployments@4.1
+        with:
+          switches: -avzr --delete --filter=". ./.rsync-filter"
+          path: cms/          
+          remote_host: 35.236.219.140
+          remote_port: 30822
+          remote_path: /www/slavaabdelrehimcms_204/public/wp-content
+          remote_user: slavaabdelrehimcms
+          remote_key: ${{ secrets.KINSTA_SSH_DEPLOY_PRIVATE_KEY }}

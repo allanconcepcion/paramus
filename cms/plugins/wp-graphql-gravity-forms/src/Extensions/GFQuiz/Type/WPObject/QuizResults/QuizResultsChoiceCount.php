@@ -1,0 +1,52 @@
+<?php
+/**
+ * GraphQL Object Type - Gravity Forms Quiz Results Score Count
+ *
+ * @package WPGraphQL\GF\Extensions\GFQuiz\Type\WPObject\QuizResults
+ * @since   0.10.4
+ */
+
+declare( strict_types = 1 );
+
+namespace WPGraphQL\GF\Extensions\GFQuiz\Type\WPObject\QuizResults;
+
+use WPGraphQL\GF\Type\WPObject\AbstractObject;
+
+/**
+ * Class - QuizResultsChoiceCount
+ */
+class QuizResultsChoiceCount extends AbstractObject {
+	/**
+	 * Type registered in WPGraphQL.
+	 *
+	 * @var string
+	 */
+	public static string $type = 'GfQuizResultsChoiceCount';
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public static function get_description(): string {
+		return __( 'The response counts for individual quiz fields.', 'wp-graphql-gravity-forms' );
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public static function get_fields(): array {
+		return [
+			'count' => [
+				'type'        => 'Int',
+				'description' => static fn () => __( 'The number of entries with this choice provided.', 'wp-graphql-gravity-forms' ),
+			],
+			'text'  => [
+				'type'        => 'String',
+				'description' => static fn () => __( 'The choice text.', 'wp-graphql-gravity-forms' ),
+			],
+			'value' => [
+				'type'        => 'String',
+				'description' => static fn () => __( 'The internal value used to represent the quiz choice.', 'wp-graphql-gravity-forms' ),
+			],
+		];
+	}
+}

@@ -1,0 +1,25 @@
+# Important! Replace all bracketed text with environment specific values. 
+
+# Here, Doctor Name can be any pretty format you want. 
+# Environment should be one of: Development | Staging | Production
+name: Deploy WP - Jacob Rogers - Production
+on:
+  push:
+    branches:      
+      - jrogersprod
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2    
+    - name: Deploy to WP Engine
+      uses: wpengine/github-action-wpe-site-deploy@v3.0
+      with:
+        WPE_SSHG_KEY_PRIVATE: ${{ secrets.WPE_SSHG_KEY_PRIVATE }} 
+        # wp_env should be same as branch above, for consitency
+        WPE_ENV: jrogersprod
+        SRC_PATH: "./cms/"
+        REMOTE_PATH: "wp-content/"
+        CACHE_CLEAR: TRUE

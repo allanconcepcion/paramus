@@ -1,0 +1,27 @@
+# Important! Replace all text marked with double underscores (__) 
+# with environment specific values. 
+
+# Here, Doctor Name can be any pretty format you want, usually just their full name. 
+# Environment should be one of: Development | Staging | Production
+name: Deploy WP - Omar El-Banhawy [Staging]
+on:
+  push:
+    branches:      
+      - elbanhawystg
+
+jobs:
+  deploy:    
+    runs-on: ubuntu-latest    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Sync
+        uses: Burnett01/rsync-deployments@4.1
+        with:
+          switches: -avzr --delete --filter=". ./.rsync-filter"
+          path: cms/          
+          remote_host: 35.236.219.140
+          remote_port: 55815
+          remote_path: /www/omarelbanhawycms_770/public/wp-content
+          remote_user: omarelbanhawycms
+          remote_key: ${{ secrets.KINSTA_SSH_DEPLOY_PRIVATE_KEY }}

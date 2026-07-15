@@ -1,0 +1,25 @@
+.DS_Store
+
+# CMS
+cms/*.log
+cms/*.map
+cms/*.bak
+
+cms/themes/*
+cms/plugins/akismet
+cms/plugins/hello.php
+cms/plugins/wp-debugging/*
+cms/uploads/*
+cms/upgrade/*
+cms/backup-db/*
+cms/advanced-cache.php
+cms/wp-cache-config.php
+cms/cache/*
+cms/cache/supercache/*
+cms/fonts/*
+
+# App
+app/.next
+app/.env.local
+app/node_modules
+app/*.pem

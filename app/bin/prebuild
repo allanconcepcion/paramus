@@ -1,0 +1,7 @@
+#! /usr/bin/env node
+
+(async function () {
+  require('dotenv').config({ path: '.env.local' })
+
+  await fetch(`${process.env.NEXT_PUBLIC_WORDPRESS_URL}/wp-admin/admin-ajax.php?action=clear_graphql_cache`)  
+})()

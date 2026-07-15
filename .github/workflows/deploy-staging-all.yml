@@ -1,0 +1,112 @@
+name: Deploy WP - Staging/Development - All
+on:
+  push:
+    tags:
+      - '*'
+jobs:
+  start_runner:
+    name: "Start self-hosted EC2 runner"
+    runs-on: ubuntu-latest
+    outputs:
+      label: ${{ steps.start-ec2-runner.outputs.label }}
+      ec2-instance-id: ${{ steps.start-ec2-runner.outputs.ec2-instance-id }}
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.GH_RUNNER_AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.GH_RUNNER_AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1          
+      - name: Start EC2 runner
+        id: start-ec2-runner
+        uses: machulav/ec2-github-runner@v2
+        with:
+          mode: start
+          github-token: ${{ secrets.GH_RUNNER_PERSONAL_ACCESS_TOKEN }}
+          ec2-image-id: ami-07bf256faa29839f9
+          ec2-instance-type: c5a.xlarge
+          subnet-id: subnet-c0d9d0b7
+          security-group-id: sg-05855e9ab5c3f4397  
+  staging_branch_sync:  
+    name: Staging Branch Sync
+    needs: [start_runner]
+    runs-on: ${{ needs.start_runner.outputs.label }}   
+    steps:  
+    - name: Checkout
+      uses: actions/checkout@v2  
+      with:
+        fetch-depth: 0
+    - name: Create and Merge Staging Pull Request
+      run: |
+        for ref in $(git for-each-ref --format='%(refname:short)' 'refs/remotes/**/**'); do 
+          branch=${ref##*/}
+
+          if [[ $branch == *prod || $branch == master ]]; then
+            continue
+          fi
+
+          echo "Creating pull request for ${branch}."
+
+          response=$(
+            curl \
+            -s \
+            -L \
+            -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${{ secrets.GH_RUNNER_PERSONAL_ACCESS_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            -d "{\"title\": \"Merging master into ${branch}\",\"body\":\"${{ github.event.head_commit.message }}\",\"head\":\"master\",\"base\":\"${branch}\"}" \
+            "https://api.github.com/repos/${{ github.repository }}/pulls"
+          )      
+
+          echo $response    
+
+          number=$(echo $response | python -c 'import sys, json; print(json.load(sys.stdin).get("number"))')
+
+          if [ $number == "None" ]; then
+            continue
+          fi
+          
+          sleep 1
+
+          response=$(
+            curl \
+            -s \
+            -L \
+            -X PUT \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${{ secrets.GH_RUNNER_PERSONAL_ACCESS_TOKEN }}" \
+            "https://api.github.com/repos/${{ github.repository }}/pulls/${number}/merge"
+          )
+          
+          merged=$(echo $response | python -c 'import sys, json; print(json.load(sys.stdin).get("merged"))')
+
+          if [ $merged == "True" ]; then
+            echo "Successfully merged pull request for ${branch}."
+          else 
+            echo "Could not merge pull request for ${branch}."
+            echo $response
+          fi          
+          
+          sleep 2
+        done
+      shell: bash
+  stop_runner:
+    name: Stop self-hosted EC2 runner
+    needs: [start_runner, staging_branch_sync]      
+    runs-on: ubuntu-latest
+    if: ${{ always() }}
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.GH_RUNNER_AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.GH_RUNNER_AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+      - name: Stop EC2 runner
+        uses: machulav/ec2-github-runner@v2
+        with:
+          mode: stop
+          github-token: ${{ secrets.GH_RUNNER_PERSONAL_ACCESS_TOKEN }}
+          label: ${{ needs.start_runner.outputs.label }}
+          ec2-instance-id: ${{ needs.start_runner.outputs.ec2-instance-id }}

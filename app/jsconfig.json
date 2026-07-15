@@ -1,0 +1,6 @@
+{ 
+  "compilerOptions": {
+    "maxNodeModuleJsDepth": 10,
+    "baseUrl": "."
+  }
+}
