@@ -34,11 +34,16 @@ export default async function handler(req, res) {
 
     let xml = await wpResponse.text()
 
+    // Strip the Yoast XSL stylesheet processing instruction. It points at
+    // the WordPress domain, and browsers hang/render a blank page trying to
+    // apply a cross-origin XSLT transform to it. Removing it just makes
+    // browsers show the raw XML instead - crawlers ignore it either way.
+    xml = xml.replace(/<\?xml-stylesheet[^>]*\?>\s*/i, '')
+
     const protocol = req.headers['x-forwarded-proto'] || (req.socket && req.socket.encrypted ? 'https' : 'http')
     const requestHost = req.headers['host']
 
-    // Only rewrite URLs inside <loc> tags so the XSL stylesheet reference
-    // (which still needs to load from WordPress) is left untouched.
+    // Only rewrite URLs inside <loc> tags.
     xml = xml.replace(
       new RegExp(`(<loc>)https?://${wpHostEscaped}(/[^<]*)?(</loc>)`, 'g'),
       (match, open, path, close) => `${open}${protocol}://${requestHost}${path || ''}${close}`
