@@ -17,6 +17,7 @@ Last updated: 2026-07-16
 - Vercel production deployment builds successfully and serves the site.
 - Images across the site (hero, header logo, doctor photos, sticky booking widget) render correctly.
 - Homepage hero background video now renders and plays (see Fixes applied, item 3).
+- Sitemap URLs at https://paramus.vercel.app/sitemap.xml now use the correct frontend domain and no longer hang the browser (see Fixes applied, items 4 and 5). NOTE: currently blocked end-to-end by a Cloudflare issue, see Open / next steps.
 
 ## Fixes applied so far
 
@@ -25,6 +26,8 @@ Last updated: 2026-07-16
 3. Homepage hero background video not showing, static image only instead of the autoplay video seen on the live site paramusdentalarts.com. Root cause was NOT the frontend code - app/components/modules/Hero.js and app/components/WPVideo.js already fully supported background video, and the video file was already uploaded and attached to the Home page in WP Admin (ACF fields field_hero_video_desktop / field_hero_video_mobile). Actual root cause was a stale WPGraphQL Object Cache entry returning null for backgroundVideoDesktop and backgroundVideoMobile, plus a Kinsta CDN edge-cache propagation delay after purging. Secondary gotcha: WPGraphQL's sourceUrl resolver returns null for video media items - must query mediaItemUrl instead.
 
 Fix procedure that worked: (1) In WP Admin, Settings > GraphQL > Cache tab, check "Purge Now!" and Save Changes. (2) In WP Admin, use the dedicated Kinsta Cache page (wp-admin/admin.php?page=kinsta-tools, not just the admin-bar "Clear Caches" shortcut) and click "Clear All Caches". (3) Wait several minutes for CDN edge propagation (Kinsta's own banner says changes usually appear globally within a few minutes) before doing anything else - redeploying immediately after purging can still pick up stale cached GraphQL data. (4) Verify fresh data by querying the WordPress GraphQL endpoint directly for backgroundVideoDesktop/Mobile mediaItemUrl and confirming it is non-null. (5) Only then trigger a Vercel redeploy (no build cache) so the static build embeds the correct data. (6) Verify on the live Vercel URL by reading window.__NEXT_DATA__.props.pageProps.page.hero directly (the actual data baked into the build) rather than relying on DOM video element inspection alone.
+4. Sitemap pointed at the wrong domain and leaked a redirect to the WordPress backend instead of serving XML at the frontend domain. Root cause was two separate bugs: (a) next.config.js rewrites sent requests straight to the WordPress origin, which issued its own redirect that leaked into the browser, and (b) Yoast's sitemap <loc> entries always contain the WordPress domain, not the frontend domain. Fix: added a new serverless proxy route app/pages/api/sitemap/[...path].js that server-side fetches the corresponding Yoast sitemap XML from WordPress (with an explicit User-Agent and Accept header, since Node's default fetch has no User-Agent and was getting blocked), rewrites every <loc> occurrence of the WordPress domain to the request's own host, and returns that as the response. Updated next.config.js rewrites to point at this internal API route instead of the external WordPress URL. Shipped as PR #1 (branch fix-sitemap-domain), merged to main.
+5. Sitemap page rendered blank in the browser (page appeared to hang, no visible XML). Root cause: Yoast's XML includes a <?xml-stylesheet type="text/xsl" href="//1202302.us28.myftpupload.com/..."?> processing instruction, and modern Chrome hangs/renders blank when it tries to apply a cross-origin XSLT transform referenced from a different domain than the one serving the XML. Fix: the proxy route now strips this processing instruction with a regex before returning the XML, so the browser just shows the raw XML tree instead of attempting (and failing) to load a cross-origin stylesheet. Shipped as PR #2 (branch fix-sitemap-stylesheet), merged to main.
 
 ## Key files
 
@@ -32,7 +35,8 @@ Fix procedure that worked: (1) In WP Admin, Settings > GraphQL > Cache tab, chec
 - app/components/WPImage.js - wrapper that maps WordPress GraphQL media fields to Image.js props; contains the protocol-fix sanitizer.
 - app/components/modules/Hero.js - homepage hero section; supports both image and video backgrounds (contentType, backgroundImageDesktop/Mobile, backgroundVideoDesktop/Mobile fields).
 - app/components/WPVideo.js - video component used by Hero.js; uses mediaItemUrl (not sourceUrl) as the video src.
-- app/next.config.js - Next.js config.
+- app/pages/api/sitemap/[...path].js - serverless proxy that fetches Yoast's sitemap XML from WordPress, rewrites the domain in <loc> tags to the request host, and strips the cross-origin xml-stylesheet processing instruction.
+- app/next.config.js - Next.js config, including sitemap rewrites that point at the internal /api/sitemap proxy.
 - app/pages/_app.js - imports lazysizes and its attrchange plugin globally.
 - cms/mu-plugins/pd/acf/page/hero.php - ACF field definitions for the Hero module (backend source of truth for field names).
 
@@ -40,7 +44,7 @@ Fix procedure that worked: (1) In WP Admin, Settings > GraphQL > Cache tab, chec
 
 - Point the custom domain paramusdentalarts.com at this Vercel deployment (not yet started).
 - User to do a final hard-refresh check that the hero video plays smoothly in their own browser. Last automated check showed the video loading correctly but stalling at readyState 0 in the test browser - may be a sandboxed network quirk rather than a real bug.
-- No other known open bugs as of last verification.
+- UNRESOLVED: the sitemap proxy's server-side fetch from Vercel to the WordPress backend is currently being blocked with a 403 Forbidden and a Cloudflare "Attention Required!" challenge page. Confirmed this is consistent and repeatable across multiple fresh, cache-busted requests to both /sitemap.xml and /page-sitemap.xml, while visiting the same WordPress URLs directly in a real browser works fine. This points to Cloudflare (Bot Fight Mode or a similar WAF rule) blocking Vercel's server-to-server request traffic (likely by IP range/ASN), not a rate-limit or frequency issue, since it fails on the very first request every time. App-side caching alone will not fix this since we cannot get even one successful fetch to cache. Real fix requires either: (a) a Cloudflare/WordPress-side change (allowlist Vercel's outbound IP ranges, or a WAF/Bot Fight Mode exception for the sitemap paths) - requires explicit user confirmation before making any WordPress/Cloudflare settings changes, or (b) an alternate approach that avoids runtime fetches to WordPress entirely (e.g. build-time generation via a webhook-triggered rebuild, or checking whether the WPGraphQL endpoint is blocked the same way before relying on it). Awaiting user decision on which direction to pursue.
 
 ## Operational notes for future sessions
 
@@ -52,3 +56,5 @@ Fix procedure that worked: (1) In WP Admin, Settings > GraphQL > Cache tab, chec
 - When inspecting video or other repeated elements on a page, verify the correct element (e.g., filter by expected src filename) rather than assuming the first DOM match is correct - this page has many videos (hero background plus a testimonial carousel).
 - Check window.__NEXT_DATA__ on the live site to see exactly what data was baked into the Next.js build - the most reliable verification method for headless CMS data issues.
 - Avoid typing non-ASCII characters (em-dashes, smart quotes) into GitHub's web-based CodeMirror editor via automation - use plain ASCII only, it can garble input otherwise.
+- Browser navigation can hit stale cached 301 redirects (Chrome caches these aggressively for navigation-type requests) even when a fresh fetch(url, {cache:'no-store'}) from the same domain shows correct behavior server-side - always verify with a no-store fetch or a brand-new tab, not just repeated navigation in the same tab.
+- Cloudflare/WAF protection in front of the WordPress backend can silently block server-to-server requests from Vercel (403 with a Cloudflare challenge page) even though the same URL loads fine in a real browser - if a proxy/fetch route suddenly starts failing, check for this before assuming an app code bug.
