@@ -8,15 +8,15 @@ domains.push(wordpressUrl.hostname)
 
 if ( isDev ) {
   try {
-    const dockerWordpressUrl = new URL(process.env.NEXT_PUBLIC_DOCKER_WORDPRESS_URL)  
+    const dockerWordpressUrl = new URL(process.env.NEXT_PUBLIC_DOCKER_WORDPRESS_URL)
     domains.push(dockerWordpressUrl.hostname)
   } catch ( e ) {}
 }
 
 const serverApiUrl = (isDev && process.env.NEXT_PUBLIC_DOCKER_WORDPRESS_URL) || process.env.NEXT_PUBLIC_WORDPRESS_URL
 
-module.exports = {  
-  trailingSlash: true,  
+module.exports = {
+  trailingSlash: true,
   serverRuntimeConfig: {
     apiUrl: serverApiUrl
   },
@@ -30,7 +30,7 @@ module.exports = {
     domains,
     formats: ['image/webp'],
     minimumCacheTTL: 31536000
-  }, 
+  },
   headers: async () => {
     return [
       {
@@ -39,18 +39,18 @@ module.exports = {
           {
             key: 'X-Frame-Options',
             value: 'DENY',
-          }, 
+          },
           {
-            key: 'Content-Security-Policy', 
+            key: 'Content-Security-Policy',
             value: "frame-ancestors 'self'"
-          }, 
+          },
           {
-            key: 'Referrer-Policy', 
+            key: 'Referrer-Policy',
             value: 'strict-origin-when-cross-origin'
           }
         ]
       }
-  ]
+    ]
   },
   rewrites: async () => {
     const sitemaps = [
@@ -60,19 +60,19 @@ module.exports = {
       },
       {
         source: '/:path(.*sitemap\.xml)',
-        destination: `${serverApiUrl}/:path`,        
+        destination: '/api/sitemap/:path',
       },
       {
         source: '/sitemap:path(.*).xml',
-        destination: `${serverApiUrl}/sitemap:path.xml`,         
+        destination: '/api/sitemap/sitemap:path.xml',
       }
-    ] 
+    ]
 
     return [
       ...sitemaps
-    ]    
+    ]
   },
-  redirects: async () => {       
+  redirects: async () => {
     const admin = [
       {
         source: '/admin',
@@ -83,21 +83,21 @@ module.exports = {
         source: '/wp-admin',
         destination: `${wordpressUrl}/wp-admin`,
         permanent: true,
-      },      
+      },
       {
-        source: '/wp-content/:path*', 
+        source: '/wp-content/:path*',
         destination: `${wordpressUrl}wp-content/:path*`,
         permanent: false,
       }
     ]
 
     let apiEndpoint = process.env.NEXT_PUBLIC_WORDPRESS_URL
-    if ( process.env.NEXT_PUBLIC_DOCKER_WORDPRESS_URL )  {
+    if ( process.env.NEXT_PUBLIC_DOCKER_WORDPRESS_URL ) {
       apiEndpoint = process.env.NEXT_PUBLIC_DOCKER_WORDPRESS_URL
     }
 
     let redirects = []
-    
+
     const response = await fetch(`${apiEndpoint}/graphql`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -113,18 +113,18 @@ module.exports = {
     })
 
     const json = await response.json()
-      
+
     if ( !json.errors ) {
       redirects = json.data.redirects.map(r => ({
-        source: `${!r.urlFrom.match(/^\//) ? '/' : ''}${r.urlFrom.replace(/\/$/, '')}`, 
-        destination: r.urlTo, 
+        source: `${!r.urlFrom.match(/^\//) ? '/' : ''}${r.urlFrom.replace(/\/$/, '')}`,
+        destination: r.urlTo,
         permanent: r.status == 301
-      })).filter(r => !!r.destination)      
-    }    
-        
+      })).filter(r => !!r.destination)
+    }
+
     return [
-      ...admin, 
-      ...redirects      
+      ...admin,
+      ...redirects
     ]
   }
 }
