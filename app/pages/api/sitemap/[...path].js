@@ -16,10 +16,19 @@ export default async function handler(req, res) {
   }
 
   try {
-    const wpResponse = await fetch(`${wpBase}${requestPath}`, { redirect: 'follow' })
+    const wpResponse = await fetch(`${wpBase}${requestPath}`, {
+      redirect: 'follow',
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (compatible; ParamusSitemapProxy/1.0; +https://paramusdentalarts.com)',
+        'Accept': 'application/xml,text/xml,*/*'
+      }
+    })
 
     if (!wpResponse.ok) {
-      res.status(wpResponse.status).end()
+      const bodyText = await wpResponse.text().catch(() => '')
+      res.status(wpResponse.status)
+      res.setHeader('Content-Type', 'text/plain')
+      res.send(`Upstream sitemap fetch failed: ${wpResponse.status} ${wpResponse.statusText}\n${bodyText.slice(0, 500)}`)
       return
     }
 
@@ -38,6 +47,8 @@ export default async function handler(req, res) {
     res.setHeader('Content-Type', 'application/xml')
     res.status(200).send(xml)
   } catch (e) {
-    res.status(502).end()
+    res.status(502)
+    res.setHeader('Content-Type', 'text/plain')
+    res.send(`Sitemap proxy error: ${e.message}`)
   }
 }
