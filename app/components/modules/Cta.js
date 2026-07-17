@@ -9,6 +9,7 @@ import { Rte } from 'components/Typography'
 import { useMinWidth } from 'hooks/useMedia'
 import AppContext from 'contexts/App'
 import { Cta as CtaButton } from 'components/Button'
+import { toLocalUrl } from 'utils/dom'
 
 const Cta = ({
   format,
@@ -82,7 +83,7 @@ const Cta = ({
             )}      
       
             {cta && (
-              <Link href={cta.url || ''} passHref>
+              <Link href={toLocalUrl(cta.url)} passHref>
                 <S_CtaButton
                   link
                   target={cta.target}
