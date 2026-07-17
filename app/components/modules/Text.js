@@ -8,6 +8,7 @@ import Headline from 'components/Headline'
 import { Rte } from 'components/Typography'
 import { Cta } from 'components/Button'
 import AppContext from 'contexts/App'
+import { toLocalUrl } from 'utils/dom'
 
 const Text = ({
   eyebrowEnabled,
@@ -55,7 +56,7 @@ const Text = ({
         <Rte dangerouslySetInnerHTML={{ __html: body }} />
 
         {ctaEnabled && cta && cta.url && (
-           <Link href={cta.url || ''} passHref>
+           <Link href={toLocalUrl(cta.url)} passHref>
              <S_Cta
               link
               target={cta.target}
