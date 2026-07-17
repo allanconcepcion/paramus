@@ -1,6 +1,7 @@
 import { useContext, useRef, useState, useEffect } from 'react'
 import styled from 'styled-components'
 import Link from 'components/LinkWithQuery'
+import { toLocalUrl } from 'utils/dom'
 import gsap from 'gsap'
 import usePrevious from '@react-hook/previous'
 
@@ -276,7 +277,7 @@ const MobileMenu = () => {
            </ul>
            </>
          ) : (
-           <Link href={url || ''} passHref>
+                   <Link href={toLocalUrl(url)} passHref>
              <NavLink
                  $backgroundColor={backgroundColor}                 
                  target={target || undefined}
