@@ -43,6 +43,7 @@ export default class MyDocument extends Document {
     return (
       <Html lang={this.props.lang}>
         <Head>
+          <meta name="viewport" content="width=device-width, initial-scale=1" />
           <link href="/fontawesome/css/all.min.css" rel="stylesheet" />
         </Head>
         <body>          
