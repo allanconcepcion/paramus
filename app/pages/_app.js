@@ -120,7 +120,8 @@ const App = ({
       </>
     )}    
     {customize.seo.headerHtml && safeHtmlParser(customize.seo.headerHtml)}    
-    </Head>        
+            <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </Head>        
     
     {customize.seo.gtmContainers?.map((container, k) => (
        <noscript
