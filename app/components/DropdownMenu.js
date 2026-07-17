@@ -4,7 +4,7 @@ import gsap from 'gsap'
 import usePrevious from '@react-hook/previous'
 
 import Link from 'components/LinkWithQuery'
-import { isUrlActive } from 'utils/dom'
+import { isUrlActive, toLocalUrl } from 'utils/dom'
 import AppContext from 'contexts/App'
 import { Icon } from 'components/SVGIcons'
 import WPImage from 'components/WPImage'
@@ -169,10 +169,10 @@ const DropdownMenu = forwardRef((props, elRef) => {
            </>
          ) : (
           <Link 
-           href={url ? url.replace(/\/+$/, '') : ''} prefetch={false}          
+                   href={toLocalUrl(url)} prefetch={false}
           >            
             <a
-              className={mounted && isUrlActive(url) ? 'is-active' : undefined}
+                        className={mounted && isUrlActive(toLocalUrl(url)) ? 'is-active' : undefined}
               target={target || undefined}
               key={label}
             >                            
@@ -196,10 +196,10 @@ const DropdownMenu = forwardRef((props, elRef) => {
               onMouseLeave={onTopLinkMouseLeave}
             >              
               <Link 
-                href={link.url || ''}
+                        href={toLocalUrl(link.url)}
               >
                 <a
-                  className={mounted && isUrlActive(link.url) ? 'is-active' : undefined}
+                          className={mounted && isUrlActive(toLocalUrl(link.url)) ? 'is-active' : undefined}
                   target={link.target || undefined}
                 >                  
                   {link.label}
