@@ -1,6 +1,6 @@
 # Paramus Dental Arts - Headless WordPress + Next.js Project Status
 
-Last updated: 2026-07-17
+Last updated: 2026-07-18
 
 ## Architecture
 
@@ -60,3 +60,8 @@ Fix procedure that worked: (1) In WP Admin, Settings > GraphQL > Cache tab, chec
 - Browser navigation can hit stale cached 301 redirects (Chrome caches these aggressively for navigation-type requests) even when a fresh fetch(url, {cache:'no-store'}) from the same domain shows correct behavior server-side - always verify with a no-store fetch or a brand-new tab, not just repeated navigation in the same tab.
 - Cloudflare/WAF protection in front of the WordPress backend can silently block server-to-server requests from Vercel (403 with a Cloudflare challenge page) even though the same URL loads fine in a real browser - if a proxy/fetch route suddenly starts failing, check for this before assuming an app code bug.
 - Vercel environment variables marked "Sensitive" can still be read at runtime, but a variable read by a build-time script (e.g. an npm "prebuild" hook) may evaluate as undefined if it is marked Sensitive - if a build-time script suddenly can't see an env var that was just updated, try removing the Sensitive flag as a diagnostic step (only for non-secret values).
+
+
+## Known Issues (Not Actionable - Do Not Re-Investigate)
+
+- Zocdoc booking widget console errors (TypeError: can't access property "runtime", browser is undefined; Cross-Origin Request Blocked on api2.zocdoc.com/metrics/v1/monitoring) are caused entirely by Zocdoc's own third-party embed script, not by our codebase - confirmed no references to Zocdoc/zd-sticky-button/offsiteschedule.zocdoc.com anywhere in this repo. Disregard these errors; they are not fixable from our code. If they need to be resolved, it requires access to the practice's Zocdoc business dashboard, which is outside this project's scope.
