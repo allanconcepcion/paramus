@@ -19,6 +19,7 @@ import {
   Cta as CtaButton,
   Play as PlayButton
 } from 'components/Button'
+import { toLocalUrl } from 'utils/dom'
 
 const MediaText = ({
   videoUrl,
@@ -167,7 +168,7 @@ const MediaText = ({
         </Row>
 
         {ctaEnabled && cta && (
-           <Link href={cta.url || ''} passHref>
+           <Link href={toLocalUrl(cta.url)} passHref>
              <S_CtaButton
                link
                target={cta.target}
