@@ -2,6 +2,7 @@ const Image = ({
   src,
   srcSet,
   lazy=true,
+  priority=false,
   webp=true,
   ...props
 }) => {
@@ -10,7 +11,8 @@ const Image = ({
   optimized = false
   
   const { NEXT_PUBLIC_DOCKER_WORDPRESS_URL } = process.env
-  const prefix = lazy ? 'data-' : ''  
+  const isLazy = lazy && !priority
+  const prefix = isLazy ? 'data-' : ''
 
   let safeSrc = src
   
@@ -51,7 +53,8 @@ const Image = ({
           type='image/webp'
         />
         <img
-          className={lazy ? 'lazy lazyload' : ''}
+          className={isLazy ? 'lazy lazyload' : ''}
+          fetchPriority={priority ? 'high' : undefined}
           src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
           {...imgAttrs}            
           alt={props.alt}
@@ -59,7 +62,8 @@ const Image = ({
       </picture>    
     ) : (
       <img
-        className={lazy ? 'lazy lazyload' : ''}
+        className={isLazy ? 'lazy lazyload' : ''}
+                        fetchPriority={priority ? 'high' : undefined}
         src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
         {...imgAttrs}            
         alt={props.alt}
