@@ -10,6 +10,7 @@ import { breakpoints } from 'styles/media'
 import AppContext from 'contexts/App'
 import DropdownMenu from 'components/DropdownMenu'
 import  { GQL_ACF_TYPOGRAPHY } from 'utils/graphql'
+import { toLocalUrl } from 'utils/dom'
 
 const Header = ({
   page
@@ -143,7 +144,7 @@ const Header = ({
 
   const renderExpandedLink = ( link, position ) => {
     return (
-      <Link href={link.url || ''} passHref>
+      <Link href={toLocalUrl(link.url)} passHref>
         <ExpandedLink 
           target={link.target}
           $position={position}
@@ -158,7 +159,7 @@ const Header = ({
 
   const renderNormalLink = ( link, position ) => {
     return (
-      <Link href={link.url || ''} passHref>
+      <Link href={toLocalUrl(link.url)} passHref>
         <NormalLink 
           target={link.target}
           $position={position}
