@@ -218,7 +218,7 @@ const Menu = ({
               {customize?.menu.ctaLinks.map((link, k) => (
                 <li key={k}>
                   <Link 
-                    href={link.link.url || ''}                    
+                    href={toLocalUrl(link.link.url)}
                   >
                     <a target={link.link.target}>                    
                       {link.link.title}
@@ -257,7 +257,7 @@ const Menu = ({
               $color={customize?.menu.ctaButtonColor}
             >
               <Link                 
-                href={customize?.menu.ctaButtonLink.url || ''}
+                href={toLocalUrl(customize?.menu.ctaButtonLink.url)}
               >
                 <a
                   target={customize?.menu.ctaButtonLink.target}
