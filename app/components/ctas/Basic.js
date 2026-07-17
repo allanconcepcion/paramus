@@ -8,6 +8,7 @@ import WPImage from 'components/WPImage'
 import { Cta } from 'components/Button'
 import SocialMenu from 'components/SocialMenu'
 import AppContext from 'contexts/App'
+import { toLocalUrl } from 'utils/dom'
 
 const Basic = ({
   backgroundColor,
@@ -63,7 +64,7 @@ const Basic = ({
                  />
                )}
               {renderedCta && (
-                 <Link href={renderedCta.url || ''} passHref>
+                 <Link href={toLocalUrl(renderedCta.url)} passHref>
                    <S_Cta
                        link
                        target={renderedCta.target}
