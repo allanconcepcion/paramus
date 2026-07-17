@@ -59,6 +59,21 @@ export const isUrlActive = ( url, currentUrl ) => {
   return !!match.match(regex)
 }
 
+export const toLocalUrl = ( url ) => {
+	  if ( !url ) return ''
+
+	  const wordpressUrl = process.env.NEXT_PUBLIC_WORDPRESS_URL
+	  let path = url
+
+	  if ( wordpressUrl && url.indexOf(wordpressUrl) === 0 ) {
+		      path = url.slice(wordpressUrl.length)
+	  }
+
+	  path = path.replace(/\/+$/, '')
+
+	  return path || '/'
+}
+
 export const wrapAll = ( nodes, wrapper ) => {
   if ( nodes?.length ) {    
     nodes[0].parentNode.insertBefore(wrapper, nodes[0]);
