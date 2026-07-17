@@ -73,6 +73,28 @@ export const toLocalUrl = ( url ) => {
 
 	  return path || '/'
 }
+export const rewriteWpHost = (html) => {
+	if (!html) return html
+
+	const wordpressUrl = process.env.NEXT_PUBLIC_WORDPRESS_URL
+	if (!wordpressUrl) return html
+
+	let wpHost
+	try {
+		wpHost = new URL(wordpressUrl).host
+	} catch (e) {
+		return html
+	}
+
+	const wpHostEscaped = wpHost.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+	const frontendOrigin = 'https://www.paramusdentalarts.com'
+	const pattern = new RegExp('https?://' + wpHostEscaped + '(?!/wp-content/)([^"]*)', 'g')
+
+	return html.replace(pattern, function (match, path) {
+		return frontendOrigin + (path || '')
+	})
+}
+
 
 export const wrapAll = ( nodes, wrapper ) => {
   if ( nodes?.length ) {    
