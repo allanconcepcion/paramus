@@ -21,6 +21,7 @@ import {
   Cta as CtaButton, 
   TextArrow as TextArrowButton
 } from 'components/Button'
+import { toLocalUrl } from 'utils/dom'
 
 const VideoCarousel = ({
   ctaEnabled,
@@ -238,7 +239,7 @@ const VideoCarousel = ({
         </Row>        
 
         {ctaEnabled && ctaLink && carouselLayoutDesktop !== '70:30' && (
-           <Link href={ctaLink.url || ''} passHref>
+           <Link href={toLocalUrl(ctaLink.url)} passHref>
              <S_CtaButton
                link
                target={ctaLink.target}
