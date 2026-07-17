@@ -1,0 +1,49 @@
+# Paramus Dental Arts
+
+> Paramus Dental Arts is a family and cosmetic dentistry practice in Paramus, New Jersey, led by Dr. Olga Degtyareva and Dr. Margarita Degtyareva. The practice offers general, cosmetic, and implant dentistry, including veneers, teeth whitening, dental implants, Invisalign-style clear aligners, and more.
+
+Location: 27 Madison Ave Ste 110, Paramus, NJ 07652
+Phone: (201) 845-5533
+Website: https://www.paramusdentalarts.com
+
+## Services
+- [Services Overview](https://www.paramusdentalarts.com/services/): Summary of all dental services offered.
+- [General Dentistry](https://www.paramusdentalarts.com/services/general-dentistry/)
+- [Cosmetic Dentistry](https://www.paramusdentalarts.com/cosmetic-dentistry/)
+- [Porcelain Veneers](https://www.paramusdentalarts.com/cosmetic-dentistry/porcelain-veneers/)
+- [Professional Teeth Whitening](https://www.paramusdentalarts.com/cosmetic-dentistry/professional-teeth-whitening/)
+- [Dental Crowns & Bridges](https://www.paramusdentalarts.com/cosmetic-dentistry/dental-crowns-bridges/)
+- [Botox Treatment](https://www.paramusdentalarts.com/cosmetic-dentistry/botox-treatment/)
+- [Dental Implants](https://www.paramusdentalarts.com/dental-implants/)
+- [Full Mouth Dental Implants](https://www.paramusdentalarts.com/dental-implants/full-mouth-dental-implants/)
+- [Affordable Dental Implants](https://www.paramusdentalarts.com/services/affordable-dental-implants/)
+- [Implant Maintenance](https://www.paramusdentalarts.com/implant-maintenance/)
+- [LAPIP Failing Implant Treatment](https://www.paramusdentalarts.com/lapip-failing-implant-treatment/)
+- [Periodontics](https://www.paramusdentalarts.com/services/periodontics/)
+- [Oral Surgery](https://www.paramusdentalarts.com/services/oral-surgery/)
+- [Full Mouth Reconstruction](https://www.paramusdentalarts.com/services/full-mouth-reconstruction/)
+- [TMJ Treatment](https://www.paramusdentalarts.com/services/tmj-treatment/)
+- [Sleep Apnea Treatment](https://www.paramusdentalarts.com/services/sleep-apnea-treatment/)
+- [Sedation Dentistry](https://www.paramusdentalarts.com/services/sedation-dentistry/)
+- [Emergency Dentistry](https://www.paramusdentalarts.com/services/emergency-dentistry/)
+- [Laser Dentistry](https://www.paramusdentalarts.com/laser-dentistry/)
+- [Candid Ortho Clear Aligners](https://www.paramusdentalarts.com/candid-ortho-clear-aligner/)
+
+## About & Team
+- [About Us](https://www.paramusdentalarts.com/about-us/)
+- [Meet the Team](https://www.paramusdentalarts.com/about-us/meet-the-team/)
+- [Meet Dr. Olga Degtyareva](https://www.paramusdentalarts.com/about-us/meet-dr-olga-degtyareva/)
+- [Meet Dr. Margarita Degtyareva](https://www.paramusdentalarts.com/about-us/meet-dr-margarita-degtyareva/)
+
+## Patient Resources
+- [Before & After Photos](https://www.paramusdentalarts.com/before-and-after-photos/)
+- [Patient Stories](https://www.paramusdentalarts.com/patient-stories/)
+- [Dental Video Library](https://www.paramusdentalarts.com/dental-video-library/)
+- [Dental Conditions](https://www.paramusdentalarts.com/dental-conditions/)
+- [Insurance & Financing](https://www.paramusdentalarts.com/insurance-and-financing/)
+- [New Patient Forms](https://www.paramusdentalarts.com/new-patient-forms/)
+- [Referral Form](https://www.paramusdentalarts.com/referral-form/)
+- [Contact Us](https://www.paramusdentalarts.com/contact-us/)
+
+## Optional
+- [Privacy Policy](https://www.paramusdentalarts.com/privacy-policy/)
