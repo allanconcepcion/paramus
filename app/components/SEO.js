@@ -1,7 +1,7 @@
 import { useContext } from 'react'
 import Head from 'next/head'
 
-import { safeHtmlParser } from 'utils/dom'
+import { safeHtmlParser, rewriteWpHost } from 'utils/dom'
 import AppContext from 'contexts/App'
 
 const SEO = ({
@@ -24,7 +24,7 @@ const SEO = ({
       <title>{title}</title>
       <meta name='robots' content={robots} />
       <meta name='description' content={metaDesc} />          
-      {safeHtmlParser(fullHead)}       
+        {safeHtmlParser(rewriteWpHost(fullHead))}
     </Head>    
     </>
   )
