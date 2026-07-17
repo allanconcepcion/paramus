@@ -11,7 +11,7 @@ import VideoModal from 'components/VideoModal'
 import CookiesConsent from '../components/CookiesConsent'
 import ThemeProvider from 'providers/Theme'
 import AppContext from 'contexts/App'
-import { safeHtmlParser } from 'utils/dom'
+import { safeHtmlParser, rewriteWpHost } from 'utils/dom'
 
 const App = ({
   children,  
@@ -138,7 +138,7 @@ const App = ({
     <ThemeProvider>
       {schema?.location === 'head' && (
         <Head>
-          {safeHtmlParser(schema.markup)}
+          {safeHtmlParser(rewriteWpHost(schema.markup))}
         </Head>
       )}      
       <Header 
@@ -158,7 +158,7 @@ const App = ({
       {videoModalOpen && <VideoModal />}
       <CookiesConsent />
       {schema?.location === 'footer' && (      
-        safeHtmlParser(schema.markup)
+                  safeHtmlParser(rewriteWpHost(schema.markup))
       )}
     </ThemeProvider>
   )  
