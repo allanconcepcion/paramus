@@ -7,7 +7,7 @@ import WPImage, { GQL_WP_IMAGE } from 'components/WPImage'
 import { Icon } from 'components/SVGIcons'
 import AppContext from 'contexts/App'
 import SocialMenu from 'components/SocialMenu'
-import { isUrlActive } from 'utils/dom'
+import { isUrlActive, toLocalUrl } from 'utils/dom'
 import { GQL_ACF_TYPOGRAPHY } from 'utils/graphql'
 
 const Menu = ({
@@ -165,10 +165,10 @@ const Menu = ({
            </>
          ) : (
           <Link 
-           href={url ? url.replace(/\/+$/, '') : ''} prefetch={false}          
-          >
-            <a
-              className={mounted && isUrlActive(url) ? 'is-active' : undefined}
+                     href={toLocalUrl(url)} prefetch={false}
+                   >
+                     <a
+                        className={mounted && isUrlActive(toLocalUrl(url)) ? 'is-active' : undefined}
               target={target || undefined}
               key={label}
             >                            
