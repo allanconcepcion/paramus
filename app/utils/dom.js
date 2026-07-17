@@ -86,6 +86,8 @@ export const rewriteWpHost = (html) => {
 		return html
 	}
 
+html = html.replace(/\\\//g, '/')
+	
 	const wpHostEscaped = wpHost.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 	const frontendOrigin = 'https://www.paramusdentalarts.com'
 	const pattern = new RegExp('https?://' + wpHostEscaped + '(?!/wp-content/)([^"]*)', 'g')
