@@ -17,6 +17,7 @@ import AppContext from 'contexts/App'
 import {
   Cta as CtaButton
 } from 'components/Button'
+import { toLocalUrl } from 'utils/dom'
 
 const Gallery = ({
   backgroundImageEnabled,
@@ -156,7 +157,7 @@ const Gallery = ({
         </Items>
 
         {ctaEnabled && ctaLink && (
-           <Link href={ctaLink.url || ''} passHref>
+           <Link href={toLocalUrl(ctaLink.url)} passHref>
              <S_CtaButton              
                link
                target={ctaLink.target}
