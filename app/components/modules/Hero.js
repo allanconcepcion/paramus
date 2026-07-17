@@ -16,7 +16,7 @@ import { useMinWidth } from 'hooks/useMedia'
 import { breakpoints } from 'styles/media'
 import { isTouch } from 'hooks/useDevice'
 import { transparentize } from 'utils/color'
-import { nl2br } from 'utils/dom'
+import { nl2br, toLocalUrl } from 'utils/dom'
 
 const Hero = ({
   contentType,
@@ -155,7 +155,7 @@ const Hero = ({
         {linklist.map((element, i) => {
           return (
             <li key={i}>
-              <Link href={element.link?.url || ''}>
+              <Link href={toLocalUrl(element.link?.url)}>
                 <a target={element.link?.target ? '_blank' : undefined}>{element.link?.title}</a>
               </Link>
             </li>
@@ -260,7 +260,7 @@ const Hero = ({
 
             {customize?.modules.hero.linkEnabled && !linkOverride && mounted && isDesktop && (
               <SimpleButton>
-                <Link href={customize?.modules.hero.link.url || ''}>
+                <Link href={toLocalUrl(customize?.modules.hero.link.url)}>
                   <a target={customize?.modules.hero.link.target}>
                     <span>{customize?.modules.hero.link.title}</span>
                   </a>              
@@ -270,7 +270,7 @@ const Hero = ({
            
            {linkOverride && linkEnabled && mounted && isDesktop && (
               <SimpleButton>
-                <Link href={link.url || ''}>
+                <Link href={toLocalUrl(link.url)}>
                   <a target={link.target}>
                     <span>{link.title}</span>
                   </a>              
@@ -280,7 +280,7 @@ const Hero = ({
 
            {customize?.modules.hero.ctaEnabled && !ctaOverride && mounted && isDesktop && (
               <Cta>
-                <Link href={customize?.modules.hero.cta.url || ''}>
+                <Link href={toLocalUrl(customize?.modules.hero.cta.url)}>
                   <a target={customize?.modules.hero.cta.target}>
                     <CtaIcon>
                       <Icon icon='arrow-right' />
@@ -295,7 +295,7 @@ const Hero = ({
            
            {ctaOverride && ctaEnabled && mounted && isDesktop && (
               <Cta>
-                <Link href={cta.url || ''}>
+                <Link href={toLocalUrl(cta.url)}>
                   <a target={cta.target}>
                     <CtaIcon>
                       <Icon icon='arrow-right' />
