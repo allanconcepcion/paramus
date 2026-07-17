@@ -53,7 +53,7 @@ const Image = ({
           type='image/webp'
         />
         <img
-          className={isLazy ? 'lazy lazyload' : ''}
+          className={isLazy ? 'lazy lazyload' : 'lazyloaded'}
           fetchPriority={priority ? 'high' : undefined}
           src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
           {...imgAttrs}            
@@ -62,7 +62,7 @@ const Image = ({
       </picture>    
     ) : (
       <img
-        className={isLazy ? 'lazy lazyload' : ''}
+        className={isLazy ? 'lazy lazyload' : 'lazyloaded'}
                         fetchPriority={priority ? 'high' : undefined}
         src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
         {...imgAttrs}            
