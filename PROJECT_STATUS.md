@@ -1,6 +1,6 @@
 # Paramus Dental Arts - Headless WordPress + Next.js Project Status
 
-Last updated: 2026-07-18
+Last updated: 2026-07-30
 
 ## Architecture
 
@@ -21,6 +21,7 @@ Last updated: 2026-07-18
 - All internal links (menu, footer CTAs, hero/text/gallery/video/media modules) now stay on the frontend domain (www.paramusdentalarts.com) instead of leaking to cms.paramusdentalarts.com or paramus.vercel.app - fully fixed and verified across 9 files (see Fixes applied, items 8 and 11).
 - Mobile PageSpeed score improved from 40 to 58 after the safe fixes in item 9 below.
 - llms.txt is live at https://www.paramusdentalarts.com/llms.txt to help LLMs understand and navigate the site (see Fixes applied, item 12).
+- Google Ads gtag.js global site tag (AW-10893934121) is live sitewide via app/pages/_document.js (see Fixes applied, item 13).
 
 ## Fixes applied so far
 
@@ -39,6 +40,7 @@ Fix procedure that worked: (1) In WP Admin, Settings > GraphQL > Cache tab, chec
 10. Hero image not rendering on some interior pages (e.g. /about-us/meet-dr-olga-degtyareva/). Root cause and fix in app/components/Image.js. Committed as 877c417. Verified across roughly 20 pages site-wide after the fix, with zero other broken images found.
 11. Footer and other "Schedule Consultation" CTA links across the site pointed to cms.paramusdentalarts.com and were being redirected to paramus.vercel.app instead of staying on www.paramusdentalarts.com. Same underlying pattern as item 8 (unguarded .url || '' on a WP-supplied link) but present in 9 files total. Fixed with the same toLocalUrl() helper in: app/components/ctas/Basic.js (95ad2f0), remaining spots in Menu.js, app/components/Header.js (fbb0446), app/components/modules/Cta.js (484495a), app/components/modules/Text.js (6c8ef2b), app/components/modules/Gallery.js (2d18708), app/components/modules/VideoCarousel.js (6fcd1d8), app/components/modules/MediaText.js (542943a), and app/components/modules/Hero.js (b4d2cca). Verified via code search that zero unguarded .url || '' instances remain in the components directory, and verified live that CTA links across the homepage and several interior pages now stay on www.paramusdentalarts.com.
 12. Added app/public/llms.txt, served statically at https://www.paramusdentalarts.com/llms.txt, following the llms.txt standard (llmstxt.org) to help LLMs understand and navigate the site. Content was drafted from the site's own sitemap (page-sitemap.xml) and contact page, and includes a summary of the practice plus organized links to roughly 32 key pages across Services, About & Team, and Patient Resources, deliberately excluding thank-you pages and PPC landing pages. Committed as bccda61 and verified live both via a direct fetch and by loading the URL in the browser.
+13. Added the Google tag (gtag.js) global site tag for Google Ads (AW-10893934121) to the shared <Head> in app/pages/_document.js, so it loads on every page. Shipped via PR #3 (branch add-google-gtag), merged to main as 86c3f03. Gotcha hit during this change: the PR's Vercel preview build initially failed with `ApolloError: Response not successful: Received status code 503` while prerendering several blog pages (fetching from the WPGraphQL backend) - this was unrelated to the gtag change itself (which only touches the document head) and turned out to be transient; a plain redeploy of the same commit (no code changes, no build cache) succeeded and generated all 92 pages cleanly. Verified live on www.paramusdentalarts.com after the production deploy: gtag script tag, inline gtag('config', ...) call, and window.dataLayer are all present.
 
 ## Key files
 
