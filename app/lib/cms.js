@@ -20,7 +20,7 @@ async function cms ( query, variables, authenticated ) {
   
   const persistenQueryLink = createPersistedQueryLink({ 
     sha256, 
-    useGETForHashedQueries: true
+    useGETForHashedQueries: false
   })
   
   const httpLink = new createUploadLink({
