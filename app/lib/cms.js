@@ -24,7 +24,8 @@ async function cms ( query, variables, authenticated ) {
   })
   
   const httpLink = new createUploadLink({
-    uri: `${serverRuntimeConfig.apiUrl || publicRuntimeConfig.apiUrl}/graphql`    
+    uri: `${serverRuntimeConfig.apiUrl || publicRuntimeConfig.apiUrl}/graphql`    ,
+      fetchOptions: { cache: 'no-store' }
   })  
 
   const authToken = btoa(`${process.env.WP_APPLICATION_USER}:${process.env.WP_APPLICATION_PASSWORD}`)
